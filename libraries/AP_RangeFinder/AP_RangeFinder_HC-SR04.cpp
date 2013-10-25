@@ -63,22 +63,20 @@ bool AP_RangeFinder_HC-SR04::take_reading()
 // read - return last value measured by sensor
 int AP_RangeFinder_MaxsonarI2CXL::read()
 {
-    uint8_t buff[2];
-    int16_t ret_value = 0;
+    long duration, inches, cm;
 
-    // take range reading and read back results
-    if (hal.i2c->read(_addr, 2, buff) != 0) {
-        healthy = false;
-    }else{
-        // combine results into distance
-        ret_value = buff[0] << 8 | buff[1];
-        healthy = true;
-    }
+    hal.gpio->pinMode(trigPin, OUTPUT);
+    hal.gpio->write(trigPin, LOW);
+    delayMicroseconds(2);
+    hal.gpip->write(trigPin, HIGH);
+    delayMicroseconds(10);
+    hal.gpio->write(trigPin, LOW);
+
+    hal.gpio->pinMode(echoPin, INPUT);
+    duration = pulseIn(echoPin, HIGH);
+ 
+    // convert the time into a distance
+    cm = microsecondsToCentimeters(duration);
     
-    // ensure distance is within min and max
-    ret_value = constrain_float(ret_value, min_distance, max_distance);
-    
-    ret_value = _mode_filter->apply(ret_value);
-    
-    return ret_value;
+    return cm
 }
