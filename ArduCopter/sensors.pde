@@ -38,22 +38,33 @@ static int16_t read_sonar(void)
         return 0;
     }
 
-    int16_t temp_alt = sonar->read();
+    long duration, cm;
+ 
+    hal.gpio->pinMode(CONFIG_SONAR_TRIG_PIN, OUTPUT);
+    hal.gpio->write(CONFIG_SONAR_TRIG_PIN, LOW);
+    hal.scheduler->delay_microseconds(2);
+    hal.gpio->write(CONFIG_SONAR_TRIG_PIN, HIGH)
+    hal.scheduler->delay_microseconds(10);
+    hal.gpio->write(CONFIG_SONAR_TRIG_PIN, LOW);
+ 
+    hal.gpio->pinMode(CONFIG_SONAR_ECHO_PIN, INPUT);
+    duration = pulseIn(CONFIG_SONAR_ECHO_PIN, HIGH);
+    temp_alt = duration / 29 / 2;
 
-    if (temp_alt >= sonar->min_distance && temp_alt <= sonar->max_distance * SONAR_RELIABLE_DISTANCE_PCT) {
+    if (temp_alt >= 3 && temp_alt <= 200 * SONAR_RELIABLE_DISTANCE_PCT) {
         if ( sonar_alt_health < SONAR_ALT_HEALTH_MAX ) {
             sonar_alt_health++;
         }
-    }else{
+    } else {
         sonar_alt_health = 0;
     }
 
- #if SONAR_TILT_CORRECTION == 1
+  #if SONAR_TILT_CORRECTION == 1
     // correct alt for angle of the sonar
     float temp = cos_pitch_x * cos_roll_x;
     temp = max(temp, 0.707f);
     temp_alt = (float)temp_alt * temp;
- #endif
+  #endif
 
     return temp_alt;
 #else
