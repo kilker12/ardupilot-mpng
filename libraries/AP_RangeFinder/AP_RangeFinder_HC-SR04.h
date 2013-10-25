@@ -19,9 +19,6 @@ public:
     // constructor
     AP_RangeFinder_HC-SR04(FilterInt16 *filter);
 
-    // take_reading - ask sensor to make a range reading
-    bool            take_reading();
-
     // read value from sensor and return distance in cm
     int             read();
 
