@@ -22,7 +22,6 @@
  *               bool healthy : indicates whether last communication with sensor was successful
  *
  *       Methods:
- *               take_reading(): ask the sonar to take a new distance measurement
  *               read() : read last distance measured (in cm)
  *
  */
@@ -44,21 +43,6 @@ AP_RangeFinder_MaxsonarI2CXL::AP_RangeFinder_HC-SR04( FilterInt16 *filter ) :
 }
 
 // Public Methods //////////////////////////////////////////////////////////////
-
-// take_reading - ask sensor to make a range reading
-bool AP_RangeFinder_HC-SR04::take_reading()
-{
-    // take range reading and read back results
-    uint8_t tosend[1] = 
-        { AP_RANGE_FINDER_MAXSONARI2CXL_COMMAND_TAKE_RANGE_READING };
-    if (hal.i2c->write(_addr, 1, tosend) != 0) {
-        healthy = false;
-        return false;
-    }else{
-        healthy = true;
-        return true;
-    }
-}
 
 // read - return last value measured by sensor
 int AP_RangeFinder_HC-SR04::read()
