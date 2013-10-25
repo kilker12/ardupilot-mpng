@@ -61,7 +61,7 @@ bool AP_RangeFinder_HC-SR04::take_reading()
 }
 
 // read - return last value measured by sensor
-int AP_RangeFinder_MaxsonarI2CXL::read()
+int AP_RangeFinder_HC-SR04::read()
 {
     long duration, inches, cm;
 
