@@ -931,11 +931,11 @@ void setup() {
  #elif CONFIG_SONAR_SOURCE == SONAR_SOURCE_ANALOG_PIN
     sonar_analog_source = hal.analogin->channel(
             CONFIG_SONAR_SOURCE_ANALOG_PIN);
+ #elif CONFIG_SONAR_SOURCE == SONAR_SOURCE_HC-SR04
+    sonar = 0
  #else
   #warning "Invalid CONFIG_SONAR_SOURCE"
  #endif
-    sonar = new AP_RangeFinder_MaxsonarXL(sonar_analog_source,
-            &sonar_mode_filter);
 #endif
 
     rssi_analog_source      = hal.analogin->channel(g.rssi_pin);
