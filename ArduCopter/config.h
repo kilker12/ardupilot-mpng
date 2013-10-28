@@ -308,6 +308,13 @@
  # ifndef CONFIG_SONAR_SOURCE_ANALOG_PIN
   #  define CONFIG_SONAR_SOURCE_ANALOG_PIN 0
  # endif
+#elif CONFIG_SONAR_SOURCE == SONAR_SOURCE_HC-SR04
+ # ifndef CONFIG_SONAR_SOURCE_TRIG
+  # define CONFIG_SONAR_SOURCE_TRIG 9
+ # endif
+ # ifndef CONFIG_SONAR_SOURCE_ECHO
+  # define CONFIG_SONAR_SOURCE_ECHO 10
+ #endif
 #else
  # warning Invalid value for CONFIG_SONAR_SOURCE, disabling sonar
  # define CONFIG_SONAR DISABLED
