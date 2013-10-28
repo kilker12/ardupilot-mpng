@@ -45,6 +45,7 @@
 // sonar - for use with CONFIG_SONAR_SOURCE
 #define SONAR_SOURCE_ADC 1
 #define SONAR_SOURCE_ANALOG_PIN 2
+#define SONAR_SOURCE_HC-SR04 3
 
 // Ch6, Ch7 and Ch8 aux switch control
 #define AUX_SWITCH_PWM_TRIGGER_HIGH 1800   // pwm value above which the ch7 or ch8 option will be invoked
