@@ -18,41 +18,9 @@
  * #define AP_RANGEFINDER_ORIENTATION_FRONT_LEFT      5,  5,  0
  */
 
-class RangeFinder
+class AP_RangeFinder
 {
-protected:
-    RangeFinder(AP_HAL::AnalogSource * source, FilterInt16 *filter) :
-        _analog_source(source),
-        _mode_filter(filter) {
-    }
-public:
-    // raw_value: read the sensor
-    int  raw_value;
-    // distance: in cm
-    int  distance;
-    // maximum measurable distance: in cm
-    int  max_distance;
-    // minimum measurable distance: in cm
-    int  min_distance;
-
-    int  orientation_x, orientation_y, orientation_z;
-    void set_orientation(int x, int y, int z);
-
-    /**
-     * convert_raw_to_distance:
-     * function that each child class should override to convert voltage
-     * to distance (in cm)
-     */
-    virtual int convert_raw_to_distance(int _raw_value) {
-        return _raw_value;
-    }
-    /**
-     * read:
-     * read value from sensor and return distance in cm
-     */
-    virtual int read();
-
-    AP_HAL::AnalogSource*       _analog_source;
-    FilterInt16 *           _mode_filter;
+    public:
+    virtual float read(void) = 0;
 };
 #endif // __RANGEFINDER_H__
