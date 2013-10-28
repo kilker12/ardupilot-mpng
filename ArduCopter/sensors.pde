@@ -40,15 +40,15 @@ static int16_t read_sonar(void)
 
     long duration, cm;
  
-    hal.gpio->pinMode(CONFIG_SONAR_TRIG_PIN, OUTPUT);
-    hal.gpio->write(CONFIG_SONAR_TRIG_PIN, LOW);
+    hal.gpio->pinMode(9, OUTPUT);
+    hal.gpio->write(9, LOW);
     hal.scheduler->delay_microseconds(2);
-    hal.gpio->write(CONFIG_SONAR_TRIG_PIN, HIGH)
+    hal.gpio->write(9, HIGH)
     hal.scheduler->delay_microseconds(10);
-    hal.gpio->write(CONFIG_SONAR_TRIG_PIN, LOW);
+    hal.gpio->write(9, LOW);
  
-    hal.gpio->pinMode(CONFIG_SONAR_ECHO_PIN, INPUT);
-    duration = pulseIn(CONFIG_SONAR_ECHO_PIN, HIGH);
+    hal.gpio->pinMode(10, INPUT);
+    duration = pulseIn(10, HIGH);
     temp_alt = duration / 29 / 2;
 
     if (temp_alt >= 3 && temp_alt <= 200 * SONAR_RELIABLE_DISTANCE_PCT) {
