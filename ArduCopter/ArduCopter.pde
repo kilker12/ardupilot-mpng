@@ -354,8 +354,7 @@ static GCS_MAVLINK gcs3;
 //
 ModeFilterInt16_Size3 sonar_mode_filter(1);
 #if CONFIG_SONAR == ENABLED
-static AP_HAL::AnalogSource *sonar_analog_source;
-static AP_RangeFinder_MaxsonarXL *sonar;
+AP_RangeFinder_HC-SR04 sonar_analog_source;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -932,7 +931,7 @@ void setup() {
     sonar_analog_source = hal.analogin->channel(
             CONFIG_SONAR_SOURCE_ANALOG_PIN);
  #elif CONFIG_SONAR_SOURCE == SONAR_SOURCE_HC-SR04
-    sonar = 0
+    sonar = AP_RangeFinder_HC-SR04
  #else
   #warning "Invalid CONFIG_SONAR_SOURCE"
  #endif
