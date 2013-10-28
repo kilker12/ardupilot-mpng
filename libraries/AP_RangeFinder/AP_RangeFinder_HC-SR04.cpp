@@ -29,8 +29,47 @@
 // AVR LibC Includes
 #include "AP_RangeFinder_HC-SR04.h"
 #include <AP_HAL.h>
+extern "C" {
+  // AVR LibC Includes
+  #include <inttypes.h>
+  #include <avr/interrupt.h>
+}
 
 extern const AP_HAL::HAL& hal;
+volatile char sonar_meas=0;
+volatile unsigned int sonar_data=0, sonar_data_start=0, pre_sonar_data=0; // Variables for calculating length of Echo impulse
+volatile uint8_t sonar_error_cnt=0;
+volatile char sonar_skip=0;
+
+// Sonar read interrupts
+ISR(TIMER5_COMPA_vect) // This event occurs when counter = 65510
+{
+        if (sonar_skip == 0){
+                if (sonar_meas == 0) // sonar_meas=1 if we not found Echo pulse, so skip this measurement
+                        sonar_data = 0;
+                sonar_meas=0; // Clean "Measurement finished" flag
+                PORTH|=B01000000; // set Sonar TX pin to 1 and after ~12us set it to 0 (below) to start new measurement
+                sonar_skip = 6; // next line will decrease it, 5*65535 = 163ms - sonar measurement cycle 
+        }
+        sonar_skip--; 
+} 
+
+ISR(TIMER5_OVF_vect) // Counter overflowed, 12us elapsed
+{
+        PORTH&=B10111111; // set TX pin to 0, and wait for 1 on Echo pin (below) 
+}
+
+ISR(PCINT0_vect)
+{
+        if (sonar_meas==0) {
+                if (PINB & B00010000) { 
+                        sonar_data_start = TCNT5; // We got 1 on Echo pin, remeber current counter value
+                } else {
+                        sonar_data=(uint32_t)TCNT5+((uint32_t)(5-sonar_skip)*65535)-sonar_data_start; // We got 0 on Echo pin, calculate impulse length in counter ticks
+                        sonar_meas=1; // Set "Measurement finished" flag
+                }
+        } 
+}
 
 // Constructor //////////////////////////////////////////////////////////////
 
